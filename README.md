@@ -1,6 +1,6 @@
-# my-webpack-simple-demo
+# my-webpack-simple-user
 
-> A Vue.js project
+> This project is part of helper.
 
 ## Build Setup
 
