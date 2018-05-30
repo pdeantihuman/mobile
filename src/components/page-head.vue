@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div id="img" class="col-xs-2"><img src="../assets/img/tianjin.jpg" /></div>
+        <div id="img" class="col-xs-2"><img src="//localhost:8081/src/assets/img/tianjin.jpg" /></div>
         <div id="title" class="col-xs-10">{{title}}</div>
     </div>
 </template>

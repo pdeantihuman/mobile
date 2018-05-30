@@ -38,7 +38,7 @@
         min-height: 100vh;/*vh窗口高度的百分比*/
         flex-direction: column;
     }
-    #list{
+    #for_footer{
         flex: 1;
     }
 </style>

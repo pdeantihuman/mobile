@@ -1,10 +1,10 @@
 <template>
-    <div id="list">
+    <div id="for_footer">
             <div class="container">
                 <div class="table-responsive">
                     <table class="table table-striped table-hover table-bordered">
                         <tr v-for="item in items">
-                            <td><router-link to="/Select"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp;{{item.message}}</router-link></td>
+                            <td><router-link :to="{ path:'/Content',query:{id:item.id}}"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp;{{item.title}}</router-link></td>
                         </tr>
                     </table>
                 </div>
@@ -14,6 +14,8 @@
 
 
 <script>
+    import api from "../api/api";
+
     export default {
         name: "page-list",
         data:function(){
@@ -21,20 +23,18 @@
                 items:[]
             }
         },
-        mounted:function () {
-            $.ajax({
-                url:"http://localhost/list.php?",
-                type:"GET",
-                dataType:"json",
-                success:function (msg) {
-                    for(let i in msg){
-                        let a = { message : msg[i]};
-                        this.items.push(a);
-                    }
-                }.bind(this)
-            });
-            this.$emit('sendText','请选择一个帮助文档');//在mounted阶段利用$emit()触发了自定义事件“sendText”
-        }
+        mounted(){
+            // this.axios.get("http://helper.test/api/articles?onlyRoot=1")
+            const get_url = api.list
+            this.axios.get(get_url)
+                .then(response => {
+                    let data = response.data.data;
+                    for (let i=0;i<data.length;i++){
+                        this.items.push(data[i]);
+                    }//得到的数据是对象数组
+                    this.$emit('sendText','请选择一个帮助文档');//在mounted阶段利用$emit()触发了自定义事件“sendText”
+                });
+        },
     }
 </script>
 

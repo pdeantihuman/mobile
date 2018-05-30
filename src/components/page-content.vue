@@ -1,54 +1,69 @@
 <template>
-    <div>
+    <div id="for_footer">
         <div class="container">
             <div class="row">
-                <div class="alert alert-success">{{message}}</div><!--TODO:此处数据由数据库查询得来，存储在localstorage-->
+                <div class="alert alert-success" v-html="this.node.body"></div>
             </div>
             <div class="row" id="button">
-                <button class="btn btn-default">解决</button>
-                <button class="btn btn-default" v-on:click="pick">未解决</button>
+                <button class="btn btn-default" v-on:click="selectLeft">解决</button>
+                <button class="btn btn-default" v-on:click="selectRight">未解决</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import api from "../api/api";
+
     export default {
         name: "page-content",
         data(){
             return{
-                message:'此处内容从localstorage读取',
-                index:1
+                tree:[],//整个树的数据
+                node:'',//当前显示的节点
+                docId:this.$route.query.id
             }
         },
-        mounted:function (){
-            this.$emit('sendText','请查看该方法是否解决您的问题？');
-            $.ajax({
-                url:'http://localhost/message.php',
-                type:'GET',
-                dataType:'json',
-                success:function (data) {
-                    let a = 1;
-                    for (let i in data){
-                        sessionStorage[a] = data[i];
-                        a++;
-                    };
-                    this.message = sessionStorage[this.index];
-
-                }.bind(this)
-            })
-        },
+        mounted:function () {
+                this.$emit('sendText','请查看该方法是否解决您的问题？');
+                // let url = `http://helper.test/api/articles/${this.docId}`;
+                let url = `${api.for_node}${this.docId}`;
+                this.axios.get(url)
+                    .then(response => {
+                        const data = response.data;
+                        this.tree = data.data;
+                        this.node = data.data;
+                    })
+            },
         methods:{
-            pick:function () {
-                this.index++;
-                // alert(this.index);
-                if (sessionStorage[this.index]===undefined)
-                {
-                    return false;
-                }else {
-                    this.message = sessionStorage[this.index];
+            selectLeft:function () {//点击解决按钮触发的事件
+                if (this.node.leftChild===0){
+                    this.$emit('sendText','抱歉，下列已是最终答案');
+                } else {
+                    let next_node_id = this.node.leftChild;//请求左子树节点
+                    let url = `${api.for_node}${next_node_id}`;
+                    this.axios.get(url)
+                        .then(response => {
+                            const data = response.data;
+                            this.tree = data.data;
+                            this.node = data.data;
+                        })
                 }
-            }
+            },
+            selectRight:function () {//点击为解决按钮触发的事件
+                if (this.node.rightChild===0){
+                    this.$emit('sendText','抱歉，下列已是最终答案');
+                } else {
+                    let next_node_id = this.node.rightChild;//请求右子树节点
+                    let url = `${api.for_node}${next_node_id}`;
+                    this.axios.get(url)
+                        .then(response => {
+                            const data = response.data;
+                            this.tree = data.data;
+                            this.node = data.data;
+                        })
+                }
+            },
         }
     }
 </script>
