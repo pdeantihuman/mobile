@@ -5,8 +5,8 @@
                 <div class="alert alert-success" v-html="this.node.body"></div>
             </div>
             <div class="row" id="button">
-                <button class="btn btn-default" v-on:click="selectLeft">解决</button>
-                <button class="btn btn-default" v-on:click="selectRight">未解决</button>
+                <button class="btn btn-default" v-on:click="selectLeft">是</button>
+                <button class="btn btn-default" v-on:click="selectRight">否</button>
             </div>
         </div>
     </div>
